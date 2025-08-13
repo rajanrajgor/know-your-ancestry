@@ -1,4 +1,3 @@
-// src/components/MemberManager.js
 import { useState, useEffect, useRef } from 'react';
 
 const MemberManager = () => {
