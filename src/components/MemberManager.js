@@ -187,8 +187,8 @@ const MemberManager = () => {
           if (Array.isArray(preview.affected)) {
             const relatives = preview.affected.filter((m) => m.id !== id);
             if (relatives.length > 0) {
-              const relativesNames = relatives.map((m) => m.name).join(', ');
-              confirmMsg = `This member has related descendant member(s): ${relativesNames}.\nIf you proceed, ALL of them will be deleted along with ${name}.\n\nThis action cannot be undone.\nDo you want to continue?`;
+              const relativesCount = relatives.length;
+              confirmMsg = `This member has ${relativesCount} related descendant member(s).\nIf you proceed, ALL of them will be deleted along with ${name}.\n\nThis action cannot be undone.\nDo you want to continue?`;
             }
           }
         }
