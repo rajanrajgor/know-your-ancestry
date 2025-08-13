@@ -1,4 +1,3 @@
-// src/components/MembersList.jsx
 import { useEffect, useState } from 'react';
 
 const MembersList = ({ onEdit }) => {
