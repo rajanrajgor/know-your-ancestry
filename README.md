@@ -1,70 +1,81 @@
-# Getting Started with Create React App
+# know-your-ancestry
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An app to manage family members and build your ancestry tree. Add members with optional details (photo, DOB, time/place of birth, address, ZIP, country), and relate members (e.g., parent/child, spouse, sibling). Data is stored locally in `data/members.json` via a small Express server.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Add, edit, and delete family members
+- Optional photo upload (stored as base64 in JSON)
+- Additional fields: phone, address, ZIP/postal code, country
+- Birth details: date, time, place
+- Relate members with a relation type
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React (Create React App)
+- Express server for persistence
+- Tailwind CSS for styling
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js 18+ and npm
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository
+2. Navigate to the project directory:
+   ```bash
+   cd "/Volumes/DATA/My_Learnings/React/my-practice/know-your-ancestry"
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Run in Development
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This project runs both the client (CRA on port 3000) and the API server (Express on port 5000).
 
-### `npm run eject`
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Client: `http://localhost:3000`
+- API: `http://localhost:5000`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Data will be created at `data/members.json` on first write.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Build for Production
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm run build
+```
 
-## Learn More
+### Test
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm test
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Project Structure
 
-### Code Splitting
+```
+know-your-ancestry/
+  public/
+  src/
+  data/
+  server.js
+  package.json
+  README.md
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Configuration
 
-### Analyzing the Bundle Size
+- The client proxies API requests to `http://localhost:5000` via `proxy` in `package.json`.
+- Server stores data in `data/members.json` relative to the project root.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## License
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT

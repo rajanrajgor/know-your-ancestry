@@ -1,23 +1,25 @@
-import logo from './logo.svg';
+
 import './App.css';
+import Header from './components/header';
+import Footer from './components/footer';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import MemberForm from './components/MemberForm';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App flex flex-col items-stretch h-screen overflow-y-hidden text-start">
+      <Router>
+        <Header />
+        <main className="flex-grow overflow-y-auto">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/add" element={<MemberForm />} />
+            <Route path="/edit/:id" element={<MemberForm />} />
+          </Routes>
+        </main>
+        <Footer />
+      </Router>
     </div>
   );
 }
