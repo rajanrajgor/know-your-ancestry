@@ -180,19 +180,23 @@ const MemberManager = () => {
 
   const deleteMember = async (id, name) => {
     try {
-      // Preview dependents
-      const previewRes = await fetch(`http://localhost:5000/api/members/${id}/dependents`);
-      if (!previewRes.ok) {
-        const msg = previewRes.status === 404 ? 'Member not found' : 'Failed to check relations';
-        setError(msg);
-        return;
+      let confirmMsg = `Are you sure you want to delete ${name}?\nThis action cannot be undone.`;
+      try {
+        const previewRes = await fetch(`http://localhost:5000/api/members/${id}/dependents`);
+        if (previewRes.ok) {
+          const preview = await previewRes.json();
+          if (Array.isArray(preview.affected)) {
+            const relatives = preview.affected.filter((m) => m.id !== id);
+            if (relatives.length > 0) {
+              const relativesNames = relatives.map((m) => m.name).join(', ');
+              confirmMsg = `This member has related descendant member(s): ${relativesNames}.\nIf you proceed, ALL of them will be deleted along with ${name}.\n\nThis action cannot be undone.\nDo you want to continue?`;
+            }
+          }
+        }
+      } catch (_) {
+        // If preview fails, keep the generic confirmation
       }
-      const preview = await previewRes.json();
-      const affectedNames = Array.isArray(preview.affected)
-        ? preview.affected.map((m) => m.name).join(', ')
-        : name;
 
-      const confirmMsg = `This member has related descendant member(s): ${affectedNames}.\nIf you proceed, ALL of them will be deleted.\n\nDo you want to continue?`;
       const proceed = window.confirm(confirmMsg);
       if (!proceed) return;
 
@@ -201,21 +205,20 @@ const MemberManager = () => {
       });
 
       if (response.ok) {
-        // Remove all deleted ids from state if provided
         let idsToRemove = [id];
         try {
           const result = await response.json();
           if (Array.isArray(result.deletedIds)) {
             idsToRemove = result.deletedIds;
           }
-        } catch (_) {
-          // ignore JSON parse issues
-        }
+        } catch (_) {}
         setMembers(prev => prev.filter(member => !idsToRemove.includes(member.id)));
         setSuccess('Member(s) deleted successfully!');
         setTimeout(() => setSuccess(''), 3000);
+        setError('');
       } else {
-        setError('Failed to delete member');
+        const text = await response.text();
+        setError(text || 'Failed to delete member');
       }
     } catch (error) {
       setError('Network error occurred');
@@ -225,7 +228,7 @@ const MemberManager = () => {
 
   return (
     <div className="min-h-full bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         {/* <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-lg mb-8 shadow-lg">
           <h1 className="text-4xl font-bold mb-2">🌳 Family Tree Builder</h1>
