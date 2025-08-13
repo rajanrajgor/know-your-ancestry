@@ -1,10 +1,7 @@
 // src/components/MemberForm.jsx
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 
-const MemberForm = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
+const MemberForm = ({ id, onCancel, onSaved }) => {
   const isEditMode = Boolean(id);
   const [members, setMembers] = useState([]);
   const [formData, setFormData] = useState({
@@ -141,7 +138,7 @@ const MemberForm = () => {
         })())
       });
       if (response.ok) {
-        if (!isEditMode) {
+         if (!isEditMode) {
           setFormData({
             name: '',
             phone: '',
@@ -157,7 +154,7 @@ const MemberForm = () => {
             photo: ''
           });
         }
-        navigate('/', { replace: true });
+         if (onSaved) onSaved();
       } else {
         const contentType = response.headers.get('content-type') || '';
         let errorMessage = isEditMode ? 'Failed to update member' : 'Failed to add member';
@@ -404,7 +401,7 @@ const MemberForm = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-xs lg:text-base lg:leading-[1.25] font-semibold text-white py-2 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
+                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-xs lg:text-base lg:leading-[1.25] font-semibold text-white py-2 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 {loading ? (
                   isEditMode ? 'Saving...' : 'Adding...'
@@ -414,7 +411,7 @@ const MemberForm = () => {
               </button>
               <button
                 type="button"
-                onClick={() => navigate('/')}
+                onClick={() => onCancel && onCancel()}
                 className="py-2 px-4 rounded-lg border border-gray-300 text-xs lg:text-base lg:leading-[1.25] font-semibold text-gray-700 hover:bg-gray-50"
               >
                 Cancel
