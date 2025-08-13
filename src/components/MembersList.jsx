@@ -1,7 +1,7 @@
 // src/components/MembersList.jsx
 import { useEffect, useState } from 'react';
 
-const MembersList = () => {
+const MembersList = ({ onEdit }) => {
   const [members, setMembers] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -181,12 +181,12 @@ const MembersList = () => {
                           >
                             Delete Member
                           </button>
-                          <a
-                            href={`/edit/${member.id}`}
+                          <button
+                            onClick={() => onEdit && onEdit(member.id)}
                             className="text-xs lg:text-base lg:leading-[1.25] font-semibold bg-amber-400 text-dark-500 hover:bg-amber-500 py-2 px-4 rounded-lg transition-all"
                           >
                             Edit Member
-                          </a>
+                          </button>
                       </div>
 
                     </div>

@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 const Footer = () => {
   const [now, setNow] = React.useState(new Date());
@@ -20,7 +19,7 @@ const Footer = () => {
         {dateTimeString}
       </div>
 
-      <Link to="/terms" className="text-xs md:text-base text-amber-500 hover:underline font-medium">Terms and Services</Link>
+      <a href="#" className="text-xs md:text-base text-amber-500 hover:underline font-medium">Terms and Services</a>
 
       <div className="text-xs md:text-base">
         &copy; {now.getFullYear()} John Doe
