@@ -122,21 +122,64 @@ app.post('/api/members', (req, res) => {
   }
 });
 
-// DELETE /api/members/:id - Delete member
+// Helper: collect descendant ids (children and their children) of a member
+// Descendants are defined as members whose relation.relatedMemberId equals the
+// given id, and relation.type is one of 'Son' or 'Daughter'. This walks
+// recursively to include grand-children, etc.
+const collectDescendantIds = (members, rootId) => {
+  const idsToDelete = new Set([rootId]);
+  const stack = [rootId];
+  while (stack.length) {
+    const currentId = stack.pop();
+    const children = members.filter(m =>
+      m.relation &&
+      m.relation.relatedMemberId === currentId &&
+      (m.relation.type === 'Son' || m.relation.type === 'Daughter')
+    );
+    for (const child of children) {
+      if (!idsToDelete.has(child.id)) {
+        idsToDelete.add(child.id);
+        stack.push(child.id);
+      }
+    }
+  }
+  return Array.from(idsToDelete);
+};
+
+// GET /api/members/:id/dependents - Preview which members would be deleted in a cascade
+app.get('/api/members/:id/dependents', (req, res) => {
+  try {
+    const { id } = req.params;
+    const currentMembers = loadMembers();
+    const exists = currentMembers.some(m => m.id === id);
+    if (!exists) {
+      return res.status(404).json({ error: 'Member not found' });
+    }
+    const ids = collectDescendantIds(currentMembers, id);
+    const affected = currentMembers.filter(m => ids.includes(m.id));
+    res.json({ ids, affected, count: affected.length });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to compute dependents' });
+  }
+});
+
+// DELETE /api/members/:id - Delete member with cascade to descendants
 app.delete('/api/members/:id', (req, res) => {
   try {
     const { id } = req.params;
     const currentMembers = loadMembers();
-    const membersAfterDelete = currentMembers.filter(m => m.id !== id);
-    
-    if (currentMembers.length === membersAfterDelete.length) {
+    const target = currentMembers.find(m => m.id === id);
+    if (!target) {
       return res.status(404).json({ error: 'Member not found' });
     }
-    
+
+    const idsToDelete = collectDescendantIds(currentMembers, id);
+    const membersAfterDelete = currentMembers.filter(m => !idsToDelete.includes(m.id));
+
     saveMembers(membersAfterDelete);
-    res.json({ message: 'Member deleted successfully' });
+    res.json({ message: 'Member(s) deleted successfully', deletedIds: idsToDelete, deletedCount: idsToDelete.length });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete member' });
+    res.status(500).json({ error: 'Failed to delete member(s)' });
   }
 });
 
