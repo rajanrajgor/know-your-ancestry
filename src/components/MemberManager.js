@@ -179,18 +179,40 @@ const MemberManager = () => {
   };
 
   const deleteMember = async (id, name) => {
-    if (!window.confirm(`Are you sure you want to delete ${name}?`)) {
-      return;
-    }
-
     try {
+      // Preview dependents
+      const previewRes = await fetch(`http://localhost:5000/api/members/${id}/dependents`);
+      if (!previewRes.ok) {
+        const msg = previewRes.status === 404 ? 'Member not found' : 'Failed to check relations';
+        setError(msg);
+        return;
+      }
+      const preview = await previewRes.json();
+      const affectedNames = Array.isArray(preview.affected)
+        ? preview.affected.map((m) => m.name).join(', ')
+        : name;
+
+      const confirmMsg = `This member has related descendant member(s): ${affectedNames}.\nIf you proceed, ALL of them will be deleted.\n\nDo you want to continue?`;
+      const proceed = window.confirm(confirmMsg);
+      if (!proceed) return;
+
       const response = await fetch(`http://localhost:5000/api/members/${id}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        setMembers(prev => prev.filter(member => member.id !== id));
-        setSuccess('Member deleted successfully!');
+        // Remove all deleted ids from state if provided
+        let idsToRemove = [id];
+        try {
+          const result = await response.json();
+          if (Array.isArray(result.deletedIds)) {
+            idsToRemove = result.deletedIds;
+          }
+        } catch (_) {
+          // ignore JSON parse issues
+        }
+        setMembers(prev => prev.filter(member => !idsToRemove.includes(member.id)));
+        setSuccess('Member(s) deleted successfully!');
         setTimeout(() => setSuccess(''), 3000);
       } else {
         setError('Failed to delete member');
