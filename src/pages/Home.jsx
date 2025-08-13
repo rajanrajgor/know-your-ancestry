@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import MembersList from '../components/MembersList';
 
 function Home() {
