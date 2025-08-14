@@ -259,9 +259,7 @@ const MemberForm = ({ id, onCancel, onSaved }) => {
                 />
               </div>
               <div>
-                <label htmlFor="placeOfBirth" className="block text-sm font-medium text-gray-700 mb-2">
-                  Place of Birth
-                </label>
+                <label htmlFor="placeOfBirth" className="block text-sm font-medium text-gray-700 mb-2">Place of Birth</label>
                 <input
                   type="text"
                   id="placeOfBirth"
@@ -273,7 +271,6 @@ const MemberForm = ({ id, onCancel, onSaved }) => {
                 />
               </div>
             </div>
-
 
             <div className="pt-4 mt-2 border-t border-gray-100">
               <label className="inline-flex items-center gap-2 text-lg text-blue-700">
