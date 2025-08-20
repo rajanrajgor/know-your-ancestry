@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/know-your-ancestry/static/css/main.e7de1112.css",
-    "main.js": "/know-your-ancestry/static/js/main.09ff0812.js",
+    "main.js": "/know-your-ancestry/static/js/main.f2f297bb.js",
     "static/js/453.be56c9e6.chunk.js": "/know-your-ancestry/static/js/453.be56c9e6.chunk.js",
     "index.html": "/know-your-ancestry/index.html",
     "main.e7de1112.css.map": "/know-your-ancestry/static/css/main.e7de1112.css.map",
-    "main.09ff0812.js.map": "/know-your-ancestry/static/js/main.09ff0812.js.map",
+    "main.f2f297bb.js.map": "/know-your-ancestry/static/js/main.f2f297bb.js.map",
     "453.be56c9e6.chunk.js.map": "/know-your-ancestry/static/js/453.be56c9e6.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e7de1112.css",
-    "static/js/main.09ff0812.js"
+    "static/js/main.f2f297bb.js"
   ]
 }
