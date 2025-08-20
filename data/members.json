@@ -40,10 +40,10 @@
     "dateOfBirth": "1992-06-26",
     "timeOfBirth": "22:44",
     "placeOfBirth": "Ahmedabad",
-    "createdAt": "2025-08-13T15:10:03.068Z",
     "relation": {
       "relatedMemberId": "1f3fd9b3-a389-4c69-8b13-d1a247caf491",
       "type": "Son"
-    }
+    },
+    "createdAt": "2025-08-13T15:10:03.068Z"
   }
 ]

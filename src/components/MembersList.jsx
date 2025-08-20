@@ -97,14 +97,14 @@ const MembersList = ({ onEdit }) => {
           <div className="min-w-full min-h-full flex items-center justify-center p-4">
             <div className="bg-white p-4 md:p-12 rounded-lg border border-gray-200 text-center">
               <div className="text-6xl mb-4">👤</div>
-              <p className="text-gray-500 text-lg mb-2">There are no family members added yet.</p>
-              <p className="text-gray-400 mb-6">Add a new member to start building your family tree.</p>
+              <p className="text-gray-500 text-lg mb-2">There are no members added yet.</p>
+              <p className="text-gray-400 mb-6">Add a new member to start building your tree.</p>
             </div>
           </div>
         ) : (
           <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center mb-8">
-              Family Members ({members.length})
+              Members ({members.length})
             </h2>
             <div className="flex flex-col gap-6">
               {members.map((member) => (
