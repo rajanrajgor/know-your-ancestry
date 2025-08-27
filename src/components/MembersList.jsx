@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const MembersList = ({ onEdit }) => {
+const MembersList = ({ onEdit, onAdd }) => {
   const [members, setMembers] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -75,7 +75,7 @@ const MembersList = ({ onEdit }) => {
   };
 
   return (
-    <div className="min-h-full flex flex-col items-stretch justify-center bg-gray-50 py-8">
+    <div className="min-h-full flex flex-col items-stretch justify-center bg-gray-50">
         {error && (
           <div className="min-w-full min-h-full flex items-center justify-center p-4">
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center">
@@ -99,21 +99,40 @@ const MembersList = ({ onEdit }) => {
               <div className="text-6xl mb-4">👤</div>
               <p className="text-gray-500 text-lg mb-2">There are no members added yet.</p>
               <p className="text-gray-400 mb-6">Add a new member to start building your tree.</p>
+
+              <button
+                onClick={onAdd}
+                className="inline-flex items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:ring-2 focus:ring-blue-500 transition-all font-medium"
+                title="Add Family Member"
+              >
+                Add Member
+              </button>
             </div>
           </div>
         ) : (
           <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center mb-8">
-              Members ({members.length})
-            </h2>
-            <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-center gap-8 bg-gray-50 py-4 sticky top-0 z-10">
+              <h2 className="text-xl font-semibold text-gray-800 flex items-center m-0">
+                Members ({members.length})
+              </h2>
+
+              <button
+                onClick={onAdd}
+                className="inline-flex items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:ring-2 focus:ring-blue-500 transition-all font-medium"
+                title="Add Family Member"
+              >
+                Add Member
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-6 mb-8">
               {members.map((member) => (
                 <div key={member.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
 
                     <div className="">
                       <div className="flex flex-col gap-4">
-                        <div className="w-6/12 md:w-full">
+                        <div className="w-full sm:w-6/12 md:w-full">
                           <div className="w-full aspect-square rounded-lg overflow-hidden bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-4xl">
                             {member.photo ? (
                               <img src={member.photo} alt={`${member.name} photo`} className="w-full h-full object-cover object-center" />

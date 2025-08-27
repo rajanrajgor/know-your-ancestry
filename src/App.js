@@ -1,7 +1,4 @@
-
 import { useState } from 'react';
-import './App.css';
-import Header from './components/header';
 import Footer from './components/footer';
 import MembersList from './components/MembersList';
 import MemberForm from './components/MemberForm';
@@ -37,10 +34,9 @@ function App() {
 
   return (
     <div className="App flex flex-col items-stretch h-screen overflow-y-hidden text-start">
-      <Header onHome={handleHome} onAdd={handleAdd} />
       <main className="flex-grow overflow-y-auto">
         {view === 'list' ? (
-          <MembersList onEdit={handleEdit} />
+          <MembersList onEdit={handleEdit} onHome={handleHome} onAdd={handleAdd} />
         ) : (
           <MemberForm id={editId} onCancel={handleCancel} onSaved={handleSaved} />
         )}

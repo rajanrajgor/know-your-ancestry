@@ -52,9 +52,10 @@ const MemberForm = ({ id, onCancel, onSaved }) => {
     setTimeout(() => nameInputRef.current?.focus({ preventScroll: true }), 0);
   }, [isEditMode, id, members]);
 
+  const API_BASE = "http://localhost:3000/api/members"; 
   const fetchMembers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/members');
+      const response = await fetch(API_BASE);
       if (response.ok) {
         const data = await response.json();
         setMembers(data);
@@ -77,101 +78,49 @@ const MemberForm = ({ id, onCancel, onSaved }) => {
     if (error) setError('');
   };
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files && e.target.files[0];
-    if (!file) {
-      setFormData((prev) => ({ ...prev, photo: '' }));
-      return;
+    if (file) {
+      setFormData((prev) => ({ ...prev, photoFile: file }));
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      setFormData((prev) => ({ ...prev, photo: reader.result }));
-    };
-    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim()) {
-      setError('Name is required');
-      return;
+  
+    const formDataObj = new FormData();
+    formDataObj.append("name", formData.name);
+    formDataObj.append("phone", formData.phone);
+    formDataObj.append("address", formData.address);
+    formDataObj.append("zipPostalCode", formData.zip);
+    formDataObj.append("country", formData.country);
+    formDataObj.append("dateOfBirth", formData.dateOfBirth);
+    formDataObj.append("timeOfBirth", formData.timeOfBirth);
+    formDataObj.append("placeOfBirth", formData.placeOfBirth);
+  
+    if (formData.photoFile) {
+      formDataObj.append("photo", formData.photoFile);
     }
-    if (formData.addRelation) {
-      if (!formData.relatedMemberId || !formData.relationType) {
-        setError('Please select a member and the relation type.');
-        return;
-      }
+  
+    if (formData.addRelation && formData.relatedMemberId && formData.relationType) {
+      formDataObj.append(
+        "relation",
+        JSON.stringify({
+          relatedMemberId: formData.relatedMemberId,
+          type: formData.relationType,
+        })
+      );
     }
-    setLoading(true);
-    setError('');
-    setSuccess('');
-    try {
-      const url = isEditMode ? `http://localhost:5000/api/members/${id}` : 'http://localhost:5000/api/members';
-      const method = isEditMode ? 'PUT' : 'POST';
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify((() => {
-          const payload = {
-            name: formData.name,
-            phone: formData.phone
-          };
-          if (formData.address !== '') payload.address = formData.address;
-          if (formData.zip !== '') payload.zipPostalCode = formData.zip;
-          if (formData.country !== '') payload.country = formData.country;
-          if (formData.dateOfBirth !== '') payload.dateOfBirth = formData.dateOfBirth;
-          if (formData.timeOfBirth !== '') payload.timeOfBirth = formData.timeOfBirth;
-          if (formData.placeOfBirth !== '') payload.placeOfBirth = formData.placeOfBirth;
-          if (formData.photo !== '') payload.photo = formData.photo;
-          if (formData.addRelation && formData.relatedMemberId && formData.relationType) {
-            payload.relation = {
-              relatedMemberId: formData.relatedMemberId,
-              type: formData.relationType
-            };
-          } else if (isEditMode) {
-            payload.relation = null;
-          }
-          return payload;
-        })())
-      });
-      if (response.ok) {
-         if (!isEditMode) {
-          setFormData({
-            name: '',
-            phone: '',
-            address: '',
-            zip: '',
-            country: '',
-            dateOfBirth: '',
-            timeOfBirth: '',
-            placeOfBirth: '',
-            addRelation: false,
-            relatedMemberId: '',
-            relationType: '',
-            photo: ''
-          });
-        }
-         if (onSaved) onSaved();
-      } else {
-        const contentType = response.headers.get('content-type') || '';
-        let errorMessage = isEditMode ? 'Failed to update member' : 'Failed to add member';
-        if (contentType.includes('application/json')) {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorData.message || errorMessage;
-        } else {
-          const text = await response.text();
-          if (text) errorMessage = text;
-        }
-        setError(errorMessage);
-      }
-    } catch (err) {
-      setError('Network error - make sure server is running');
-      // eslint-disable-next-line no-console
-      console.error('Submit error:', err);
-    } finally {
-      setLoading(false);
+  
+    const response = await fetch(API_BASE, {
+      method: "POST",
+      body: formDataObj,
+    });
+  
+    if (response.ok) {
+      onSaved?.();
+    } else {
+      console.error("Failed to save member");
     }
   };
 

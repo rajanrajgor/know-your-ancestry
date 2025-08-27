@@ -41,7 +41,7 @@ const MemberManager = () => {
 
   const fetchMembers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/members');
+      const response = await fetch('http://localhost:3000/api/members');
       if (response.ok) {
         const data = await response.json();
         setMembers(data);
@@ -97,7 +97,7 @@ const MemberManager = () => {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/members', {
+      const response = await fetch('http://localhost:3000/api/members', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ const MemberManager = () => {
     try {
       let confirmMsg = `Are you sure you want to delete ${name}?\nThis action cannot be undone.`;
       try {
-        const previewRes = await fetch(`http://localhost:5000/api/members/${id}/dependents`);
+        const previewRes = await fetch(`http://localhost:3000/api/members/${id}/dependents`);
         if (previewRes.ok) {
           const preview = await previewRes.json();
           if (Array.isArray(preview.affected)) {
@@ -199,7 +199,7 @@ const MemberManager = () => {
       const proceed = window.confirm(confirmMsg);
       if (!proceed) return;
 
-      const response = await fetch(`http://localhost:5000/api/members/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/members/${id}`, {
         method: 'DELETE',
       });
 
